@@ -163,7 +163,7 @@ class CarInterface(CarInterfaceBase):
       ret.steerRatio = 14.4 * 1.1   # 10% higher at the center seems reasonable
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
-    elif candidate in (CAR.KIA_NIRO_EV, CAR.KIA_NIRO_HEV, CAR.KIA_NIRO_HEV_2021):
+    elif candidate in (CAR.KIA_NIRO_HEV, CAR.KIA_NIRO_HEV_2021):
       ret.lateralTuning.pid.kf = 0.00006
       ret.mass = 1737. + STD_CARGO_KG
       ret.wheelbase = 2.7
@@ -173,6 +173,25 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
       if candidate == CAR.KIA_NIRO_HEV:
         ret.minSteerSpeed = 32 * CV.MPH_TO_MS
+    elif candidate == CAR.KIA_NIRO_EV:
+      ret.mass = 1850. + STD_CARGO_KG
+      ret.wheelbase = 2.7
+      ret.steerRatio = 13.3
+      ret.steerRateCost = 0.2 # mpc steer cost  stock 0.35
+      tire_stiffness_factor = 0.7
+      ret.lateralTuning.init('indi')
+      ret.lateralTuning.indi.innerLoopGainBP = [0., 60. * CV.KPH_TO_MS, 80. * CV.KPH_TO_MS]
+      ret.lateralTuning.indi.innerLoopGainV = [3., 4.5, 5.5]
+      ret.lateralTuning.indi.outerLoopGainBP = [0., 60. * CV.KPH_TO_MS]
+      ret.lateralTuning.indi.outerLoopGainV = [2, 3.8]
+      ret.lateralTuning.indi.timeConstantBP = [0.]
+      ret.lateralTuning.indi.timeConstantV = [1.2]
+      ret.lateralTuning.indi.actuatorEffectivenessBP = [0.]
+      ret.lateralTuning.indi.actuatorEffectivenessV = [1.4]
+      ret.longitudinalTuning.kpBP = [0, 10. * CV.KPH_TO_MS, 20. * CV.KPH_TO_MS, 40. * CV.KPH_TO_MS, 70. * CV.KPH_TO_MS, 100. * CV.KPH_TO_MS, 130. * CV.KPH_TO_MS]
+      ret.longitudinalTuning.kpV = [0.5, 1.05, 1.37, 1.18, 1.11, 1.05, 1]
+      ret.longitudinalTuning.kiBP = [0., 20.* CV.KPH_TO_MS, 80.* CV.KPH_TO_MS, 100.* CV.KPH_TO_MS, 130.* CV.KPH_TO_MS]
+      ret.longitudinalTuning.kiV = [0.03, 0.07, 0.05, 0.04, 0.03]
     elif candidate == CAR.KIA_SELTOS:
       ret.mass = 1337. + STD_CARGO_KG
       ret.wheelbase = 2.63
